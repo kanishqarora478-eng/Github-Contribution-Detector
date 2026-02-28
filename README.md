@@ -1,354 +1,145 @@
-1️⃣ Problem Statement
-Problem Title
+# GitHub Contribution Intelligence Dashboard
 
-Analyzing Developer Contribution Patterns on GitHub
+A web-based analytics platform that transforms GitHub contribution data into structured productivity insights, streak detection reports, and AI-based code probability analysis using a multi-LLM pipeline.
 
-Problem Description
+---
 
-Many developers struggle to understand their contribution consistency, productivity trends, and inactive periods. GitHub provides raw data but lacks deeper analytics and intelligent insights.
+## Overview
 
-Target Users
+GitHub displays contribution history but does not provide deeper insights into productivity patterns or inactivity gaps. This project analyzes contribution data and repository structure to generate meaningful performance metrics.
 
-Developers
+The system combines rule-based streak analysis with a multi-LLM pipeline orchestrated through n8n to produce structured analytics and AI probability estimation.
 
-Students
+---
 
-Recruiters
+## Problem Statement
 
-Open-source contributors
+Developers often struggle to interpret their contribution consistency and coding trends. While GitHub provides raw activity data, it does not generate actionable insights.
 
-Existing Gaps
+### Existing Gaps
 
-No automated streak detection insights
+- No automated analysis of streaks and inactivity patterns  
+- No structured evaluation of repository behavior or AI-generated code probability  
 
-No inactivity alerts
+---
 
-No productivity trend analysis
+## Solution
 
-Limited visualization of contribution behavior
+The GitHub Contribution Intelligence Dashboard provides:
 
-2️⃣ Problem Understanding & Approach
-Root Cause Analysis
+- Contribution streak detection (longest and current streak)
+- Inactivity pattern identification
+- Productivity scoring (0–100 scale)
+- Multi-LLM AI probability estimation
+- Structured performance insights
 
-GitHub provides contribution data but does not offer advanced pattern detection or behavioral insights.
+The system processes GitHub data and presents analytics through an interactive dashboard.
 
-Solution Strategy
+---
 
-Fetch GitHub user contribution data using GitHub REST API
+## System Architecture
 
-Analyze contribution frequency
+### High-Level Flow
 
-Detect streaks & inactivity periods
+User → Frontend → Backend → n8n Multi-LLM Pipeline → Database → Response
 
-Provide structured analytics
+### Architecture Components
 
-3️⃣ Proposed Solution
-Solution Overview
+**Frontend (React)**  
+Accepts GitHub username or repository link and displays analytics.
 
-A system that retrieves GitHub contribution data and processes it to identify activity patterns.
+**Backend (Node.js, Express)**  
+Fetches GitHub data and communicates with the n8n pipeline.
 
-Core Idea
+**n8n Multi-LLM Pipeline**  
+Analyzes repository code and contribution patterns using multiple LLMs. Aggregates outputs to generate productivity score and AI probability estimation.
 
-Transform raw GitHub contribution data into meaningful insights.
+**Database (MongoDB)**  
+Stores processed analytics and user reports.
 
-Key Features
+---
 
-Contribution frequency analysis
+## Model Architecture
 
-Longest streak detection
+**Model Name:** Multi-LLM Analytical Pipeline (n8n Orchestrated)
 
-Inactive period detection
+### Working Process
 
-Activity trend insights
+1. GitHub repository and contribution data are fetched.
+2. Data is sent to an n8n workflow.
+3. Multiple LLMs analyze patterns and repository structure.
+4. Outputs are aggregated.
+5. Final productivity score and AI probability percentage are generated.
 
-REST API integration
+### Evaluation Criteria
 
-4️⃣ System Architecture
-High-Level Flow
+- Accuracy of streak detection
+- Consistency between LLM outputs
+- Logical validation of AI probability estimation
 
-User → Frontend → Backend → GitHub API → Processing Logic → Database → Response
+---
 
-Architecture Description
+## Technology Stack
 
-Frontend: User inputs GitHub username
+- Frontend: React  
+- Backend: Node.js, Express  
+- AI/ML Pipeline: n8n with multiple LLM integrations  
+- Database: MongoDB  
+- Deployment: Vercel  
 
-Backend: Handles API requests & processing
+---
 
-GitHub API: Fetches contribution data
+## End-to-End Workflow
 
-Processing Module: Analyzes streaks & trends
+1. User enters GitHub username or repository link.
+2. Backend fetches contribution and repository data.
+3. Data is forwarded to the n8n pipeline.
+4. LLMs analyze patterns and repository structure.
+5. Productivity score and AI-generation probability are calculated.
+6. Results are stored in MongoDB.
+7. Dashboard displays structured analytics.
 
-Database: Stores processed results
+---
 
-Response Layer: Displays analytics
+## Future Scope
 
-Architecture Diagram
+### Short-Term
+- Contribution heatmaps
+- Downloadable performance reports
+- Weekly performance summaries
 
-+-------------+
-| User |
-+-------------+
-|
-v
-+----------------+
-| Frontend |
-| (React / HTML) |
-+----------------+
-|
-v
-+----------------+
-| Backend |
-| (Node/Flask) |
-+----------------+
-|
-v
-+----------------------+
-| GitHub REST API |
-+----------------------+
-|
-v
-+----------------------+
-| Processing Module |
-| - Streak Detection |
-| - Frequency Analysis |
-| - Inactivity Check |
-+----------------------+
-|
-v
-+----------------+
-| Database |
-| (MongoDB etc.) |
-+----------------+
-|
-v
-+----------------+
-| API Response |
-+----------------+
-|
-v
-+----------------+
-| Frontend UI |
-+----------------+
+### Long-Term
+- Productivity forecasting models
+- Team-level analytics dashboard
+- Recruiter-focused analytics panel
+- Enterprise-scale repository intelligence system
 
-5️⃣ Database Design
-+---------+ +----------------+ +------------------+
-| User | 1 ----<| Contribution | | Analysis_Report |
-+---------+ +----------------+ +------------------+
-| user_id | | contrib_id | | report_id |
-| username| | date | | longest_streak |
-| email | | count | | inactive_days |
-+---------+ | user_id (FK) | | frequency_score |
-+----------------+ | user_id (FK) |
-+------------------+
+---
 
-Entities:
+## Known Limitations
 
-User
+- Only public GitHub repositories can be analyzed
+- Private repositories are not accessible
+- AI probability results are estimations, not definitive conclusions
 
-Contribution
+---
 
-Analysis Report
+## Team
 
-Relationships:
+**Bhavish Dhar** — Team Lead & Backend Developer  
+System architecture, API integration, LLM pipeline coordination  
 
-One User → Many Contributions
+**Kanishq Arora** — Frontend Developer  
+UI design, dashboard implementation, research  
 
-One User → One Analysis Report
+**Anshika Verma** — Frontend Developer  
+UI components, visualization, testing  
 
-6️⃣ Dataset Selected
-Dataset Name
+---
 
-GitHub Contribution Data
+## Impact
 
-Source
-
-GitHub REST API
-
-Data Type
-
-JSON-based user activity data
-
-Selection Reason
-
-Real-time authentic developer activity data.
-
-Preprocessing Steps
-
-Remove null values
-
-Convert timestamps
-
-Aggregate daily contributions
-
-Normalize data
-
-7️⃣ Model Selected
-
-(If you are NOT using ML, you can write this 👇)
-
-Model Name
-
-Rule-Based Analytical Engine
-
-Selection Reasoning
-
-Project focuses on pattern detection rather than predictive modeling.
-
-Alternatives Considered
-
-Time-series forecasting models
-
-ML-based activity prediction
-
-Evaluation Metrics
-
-Accuracy of streak detection
-
-Correct inactivity identification
-
-8️⃣ Technology Stack
-Frontend
-
-(React / HTML-CSS / etc.)
-
-Backend
-
-(Node.js / Flask / Django)
-
-ML/AI
-
-Rule-based analytics engine
-
-Database
-
-(MongoDB / PostgreSQL / Firebase)
-
-Deployment
-
-(Render / Vercel / Railway / etc.)
-
-9️⃣ API Documentation & Testing
-API Endpoints List
-
-Endpoint 1:
-GET /user/:username
-
-Endpoint 2:
-GET /analysis/:username
-
-Endpoint 3:
-GET /streak/:username
-
-API Testing Screenshots
-
-(Add Postman screenshots here)
-
-🔟 Module-wise Development & Deliverables
-✅ Checkpoint 1: Research & Planning
-
-Deliverables:
-
-Problem validation
-
-Architecture design
-
-✅ Checkpoint 2: Backend Development
-
-Deliverables:
-
-GitHub API integration
-
-Contribution data fetch
-
-✅ Checkpoint 3: Frontend Development
-
-Deliverables:
-
-User input interface
-
-Data visualization
-
-✅ Checkpoint 4: Model Training
-
-Deliverables:
-
-Pattern detection logic
-
-✅ Checkpoint 5: Model Integration
-
-Deliverables:
-
-Backend + Analytics integration
-
-✅ Checkpoint 6: Deployment
-
-Deliverables:
-
-Live hosted application
-
-1️⃣1️⃣ End-to-End Workflow
-
-User enters GitHub username
-
-Backend fetches data
-
-Processing logic analyzes patterns
-
-Results stored in database
-
-Insights displayed on frontend
-
-1️⃣2️⃣ Demo & Video
-
-Live Demo Link: (Add link)
-Demo Video Link: (Add link)
-GitHub Repository: (Your repo link)
-
-1️⃣3️⃣ Hackathon Deliverables Summary
-
-Fully functional GitHub Contribution Analyzer
-
-API integration
-
-Pattern detection system
-
-Deployment ready
-
-1️⃣4️⃣ Team Roles & Responsibilities
-
-Kanishq arora, Research and frontend developer, Leader
-
-Anshika verma ,	Research and frontend developer
-
-Bhavish Dhar ,Backend developer
-
-
-1️⃣5️⃣ Future Scope & Scalability
-
-Short-Term:
-
-Add graphical contribution heatmaps
-
-Add exportable reports
-
-Long-Term:
-
-ML-based productivity prediction
-
-Team-level analytics
-
-Recruiter dashboard
-
-1️⃣6️⃣ Known Limitations
-
-Public data only
-
-No private repo analytics
-
-1️⃣7️⃣ Impact
-
-Helps developers track productivity
-
-Encourages consistent coding habits
-
-Useful for resume & portfolio analysis
-
+- Encourages consistent development habits
+- Provides measurable productivity insights
+- Assists recruiters in structured contribution evaluation
+- Introduces AI-assisted repository behavior analysis
