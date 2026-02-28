@@ -84,14 +84,61 @@ Response Layer: Displays analytics
 
 Architecture Diagram
 
-(Add system architecture diagram image here)
++-------------+
+| User |
++-------------+
+|
+v
++----------------+
+| Frontend |
+| (React / HTML) |
++----------------+
+|
+v
++----------------+
+| Backend |
+| (Node/Flask) |
++----------------+
+|
+v
++----------------------+
+| GitHub REST API |
++----------------------+
+|
+v
++----------------------+
+| Processing Module |
+| - Streak Detection |
+| - Frequency Analysis |
+| - Inactivity Check |
++----------------------+
+|
+v
++----------------+
+| Database |
+| (MongoDB etc.) |
++----------------+
+|
+v
++----------------+
+| API Response |
++----------------+
+|
+v
++----------------+
+| Frontend UI |
++----------------+
 
 5️⃣ Database Design
-ER Diagram
-
-(Add ER diagram image here)
-
-ER Diagram Description
++---------+ +----------------+ +------------------+
+| User | 1 ----<| Contribution | | Analysis_Report |
++---------+ +----------------+ +------------------+
+| user_id | | contrib_id | | report_id |
+| username| | date | | longest_streak |
+| email | | count | | inactive_days |
++---------+ | user_id (FK) | | frequency_score |
++----------------+ | user_id (FK) |
++------------------+
 
 Entities:
 
