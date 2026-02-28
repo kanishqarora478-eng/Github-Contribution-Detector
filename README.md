@@ -324,13 +324,13 @@ Bhavish Dhar ,Backend developer
 
 1️⃣5️⃣ Future Scope & Scalability
 
-Short-Term
+Short-Term:
 
 Add graphical contribution heatmaps
 
 Add exportable reports
 
-Long-Term
+Long-Term:
 
 ML-based productivity prediction
 
