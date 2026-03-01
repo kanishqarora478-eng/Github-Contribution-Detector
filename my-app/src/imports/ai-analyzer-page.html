@@ -1,0 +1,172 @@
+<html class="dark"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1313ec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101022",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .mesh-gradient {
+            background-color: #101022;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(19, 19, 236, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(19, 19, 236, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(19, 19, 236, 0.05) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(19, 19, 236, 0.1) 0px, transparent 50%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .primary-glow {
+            box-shadow: 0 0 20px rgba(19, 19, 236, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 selection:bg-primary/30">
+<div class="relative min-h-screen w-full flex flex-col mesh-gradient overflow-x-hidden">
+<header class="flex items-center justify-between px-6 py-4 lg:px-20 border-b border-white/5 backdrop-blur-md sticky top-0 z-50">
+<div class="flex items-center gap-2 group cursor-pointer">
+<div class="bg-primary p-1.5 rounded-lg text-white">
+<span class="material-symbols-outlined text-2xl">neurology</span>
+</div>
+<h2 class="text-slate-100 text-lg font-bold tracking-tight">AI Analyzer</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-400 hover:text-white text-sm font-medium transition-colors" href="#">Features</a>
+<a class="text-slate-400 hover:text-white text-sm font-medium transition-colors" href="#">Pricing</a>
+<a class="text-slate-400 hover:text-white text-sm font-medium transition-colors" href="#">Documentation</a>
+<a class="text-slate-400 hover:text-white text-sm font-medium transition-colors" href="#">Enterprise</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:text-white text-sm font-medium transition-colors px-4">Log In</button>
+<button class="bg-primary hover:bg-primary/90 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all primary-glow">
+                    Get Started
+                </button>
+</div>
+</header>
+<main class="flex-1 flex flex-col items-center justify-center px-4 py-20 relative">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] -z-10"></div>
+<div class="max-w-[800px] w-full text-center mb-12">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+<span class="material-symbols-outlined text-sm">verified</span>
+                    Industry Standard Verification
+                </div>
+<h1 class="text-white text-5xl md:text-7xl font-black leading-[1.1] tracking-tight mb-6">
+                    AI Code Authenticity <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Analyzer</span>
+</h1>
+<p class="text-slate-400 text-lg md:text-xl font-normal max-w-2xl mx-auto leading-relaxed">
+                    Detect AI-generated code patterns with advanced intelligence. Analyze GitHub repositories with industry-leading precision.
+                </p>
+</div>
+<div class="w-full max-w-3xl glass-card rounded-2xl p-8 md:p-12 shadow-2xl relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<div class="flex flex-col gap-2 text-left">
+<label class="text-slate-300 text-sm font-semibold ml-1">GitHub Username</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors">person</span>
+<input class="w-full bg-slate-900/50 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="e.g. vercel" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-2 text-left">
+<label class="text-slate-300 text-sm font-semibold ml-1">Project URL</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-primary transition-colors">link</span>
+<input class="w-full bg-slate-900/50 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="github.com/..." type="text"/>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-blue-600 text-white font-bold text-lg py-5 rounded-xl transition-all flex items-center justify-center gap-3 primary-glow group-hover:scale-[1.01]">
+<span class="material-symbols-outlined">analytics</span>
+                    Analyze Project Authenticity
+                </button>
+<p class="mt-6 text-slate-500 text-xs text-center flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[14px]">info</span>
+                    Analysis takes less than 2 seconds for most repositories.
+                </p>
+</div>
+<div class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+<div class="flex flex-col items-center md:items-start p-6 rounded-2xl border border-white/5 bg-white/2 hover:bg-white/5 transition-all">
+<div class="bg-slate-800/50 p-3 rounded-xl text-primary mb-4">
+<span class="material-symbols-outlined text-2xl">query_stats</span>
+</div>
+<h3 class="text-white text-lg font-bold mb-2">Pattern Recognition</h3>
+<p class="text-slate-400 text-sm text-center md:text-left leading-relaxed">Advanced ML models identify logical structures characteristic of LLMs.</p>
+</div>
+<div class="flex flex-col items-center md:items-start p-6 rounded-2xl border border-white/5 bg-white/2 hover:bg-white/5 transition-all">
+<div class="bg-slate-800/50 p-3 rounded-xl text-primary mb-4">
+<span class="material-symbols-outlined text-2xl">account_tree</span>
+</div>
+<h3 class="text-white text-lg font-bold mb-2">GitHub Native</h3>
+<p class="text-slate-400 text-sm text-center md:text-left leading-relaxed">Direct integration with GitHub API for deep commit and branch history analysis.</p>
+</div>
+<div class="flex flex-col items-center md:items-start p-6 rounded-2xl border border-white/5 bg-white/2 hover:bg-white/5 transition-all">
+<div class="bg-slate-800/50 p-3 rounded-xl text-primary mb-4">
+<span class="material-symbols-outlined text-2xl">description</span>
+</div>
+<h3 class="text-white text-lg font-bold mb-2">Detailed Reports</h3>
+<p class="text-slate-400 text-sm text-center md:text-left leading-relaxed">Receive a comprehensive PDF breakdown showing probability of AI involvement per file.</p>
+</div>
+</div>
+<div class="mt-20 flex flex-wrap justify-center gap-8 md:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex items-center gap-2 text-white font-bold text-xl tracking-tight">
+<span class="material-symbols-outlined text-2xl">hub</span>
+                    GITHUB
+                </div>
+<div class="flex items-center gap-2 text-white font-bold text-xl tracking-tight">
+<span class="material-symbols-outlined text-2xl">terminal</span>
+                    Vercel
+                </div>
+<div class="flex items-center gap-2 text-white font-bold text-xl tracking-tight">
+<span class="material-symbols-outlined text-2xl">database</span>
+                    Supabase
+                </div>
+<div class="flex items-center gap-2 text-white font-bold text-xl tracking-tight">
+<span class="material-symbols-outlined text-2xl">linear_scale</span>
+                    Linear
+                </div>
+</div>
+</main>
+<footer class="mt-20 px-6 py-10 lg:px-20 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 bg-slate-900/20">
+<div class="flex items-center gap-2">
+<div class="bg-primary/20 p-1 rounded-lg text-primary">
+<span class="material-symbols-outlined text-xl">neurology</span>
+</div>
+<span class="text-slate-400 text-sm font-medium">© 2024 AI Analyzer Inc.</span>
+</div>
+<div class="flex gap-8 text-slate-500 text-sm">
+<a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-white transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-white transition-colors" href="#">Contact</a>
+</div>
+<div class="flex gap-4">
+<button class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-lg">public</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-lg">code</span>
+</button>
+</div>
+</footer>
+</div>
+</body></html>
