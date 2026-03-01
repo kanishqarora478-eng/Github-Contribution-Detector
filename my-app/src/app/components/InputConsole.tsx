@@ -1,18 +1,121 @@
-import { motion } from 'motion/react';
-import { useState } from 'react';
-import { Brain, User, Link2, BarChart3, GitFork, FileText } from 'lucide-react';
+"use client";
+import { motion } from "motion/react";
+import { useState } from "react";
+import { Brain, User, Link2, BarChart3, GitFork, FileText } from "lucide-react";
 
 interface InputConsoleProps {
   onAnalyze: (username: string, projectUrl: string) => void;
 }
 
 export function InputConsole({ onAnalyze }: InputConsoleProps) {
-  const [username, setUsername] = useState('');
-  const [projectUrl, setProjectUrl] = useState('');
+  const [username, setUsername] = useState("");
+  const [projectUrl, setProjectUrl] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim() && projectUrl.trim()) {
+      // Extract owner and repo from projectUrl
+      const urlParts = projectUrl
+        .trim()
+        .replace("https://github.com/", "")
+        .split("/");
+      const owner = urlParts[0];
+      const repo = urlParts[1];
+
+      if (owner && repo) {
+        try {
+          // Fetch GitHub commit data
+          const headers: HeadersInit = {
+            Accept: "application/vnd.github.v3+json",
+          };
+
+          // Add bearer token if available
+          const bearerToken = import.meta.env.VITE_GITHUB_BEARER_TOKEN;
+          console.log("Bearer token available:", !!bearerToken);
+          console.log("Token length:", bearerToken?.length || 0);
+
+          if (bearerToken) {
+            headers["Authorization"] = `Bearer ${bearerToken}`;
+          } else {
+            console.warn("No VITE_GITHUB_BEARER_TOKEN found in environment");
+          }
+
+          const response = await fetch(
+            `https://api.github.com/repos/${owner}/${repo}/commits`,
+            {
+              headers,
+            },
+          );
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(
+              `GitHub API Error (${response.status}): ${errorData.message || response.statusText}`,
+            );
+          }
+
+          const data = await response.json();
+
+          if (!Array.isArray(data)) {
+            throw new Error(
+              `Expected array from GitHub API, got: ${typeof data}. Response: ${JSON.stringify(data)}`,
+            );
+          }
+
+          const shaarr: string[] = data.map(
+            (item: { sha: string }) => item.sha,
+          );
+          const commitArr = await Promise.all(
+            shaarr.map(async (sha) => {
+              const response = await fetch(
+                `https://api.github.com/repos/${owner}/${repo}/commits/${sha}`,
+                {
+                  headers,
+                },
+              );
+
+              if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(
+                  `Failed for SHA: ${sha}. GitHub API Error (${response.status}): ${errorData.message || response.statusText}`,
+                );
+              }
+
+              return response.json();
+            }),
+          );
+          interface GitHubFile {
+            patch?: string;
+            filename?: string;
+            status?: string;
+            additions?: number;
+            deletions?: number;
+            changes?: number;
+          }
+
+          const transformedData = {
+            repository: "EV_CHARGING_PREDICTOR",
+            commits: commitArr.map((commit) => {
+              const diff = commit.files?.length
+                ? commit.files
+                    .map((file: GitHubFile) => file.patch ?? "")
+                    .join("\n")
+                : "";
+
+              return {
+                commit_id: commit.sha,
+                message: commit.commit.message,
+                diff,
+                author: commit.commit.author.email,
+                timestamp: commit.commit.author.date,
+              };
+            }),
+          };
+        } catch (error) {
+          console.error("Error fetching GitHub data:", error);
+        }
+      }
+
       onAnalyze(username.trim(), projectUrl.trim());
     }
   };
@@ -38,26 +141,27 @@ export function InputConsole({ onAnalyze }: InputConsoleProps) {
           <Brain className="w-3 h-3" />
           Industry Standard Verification
         </motion.div>
-        
+
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           className="text-white text-4xl sm:text-5xl md:text-7xl font-black leading-[1.1] tracking-tight mb-4 sm:mb-6 px-4"
         >
-          AI Code Authenticity{' '}
+          AI Code Authenticity{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7f13ec] to-blue-400">
             Analyzer
           </span>
         </motion.h1>
-        
+
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
           className="text-slate-400 text-base sm:text-lg md:text-xl font-normal max-w-2xl mx-auto leading-relaxed px-4"
         >
-          Detect AI-generated code patterns with advanced intelligence. Analyze GitHub repositories with industry-leading precision.
+          Detect AI-generated code patterns with advanced intelligence. Analyze
+          GitHub repositories with industry-leading precision.
         </motion.p>
       </motion.div>
 
@@ -71,17 +175,21 @@ export function InputConsole({ onAnalyze }: InputConsoleProps) {
       >
         {/* Top Gradient Line */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#7f13ec] to-transparent opacity-50"></div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* GitHub Username Input */}
           <div className="flex flex-col gap-2 text-left">
-            <label className="text-slate-300 text-sm font-semibold ml-1">GitHub Username</label>
+            <label className="text-slate-300 text-sm font-semibold ml-1">
+              GitHub Username
+            </label>
             <div className="relative group">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-[#7f13ec] transition-colors" />
               <input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setUsername(e.target.value)
+                }
                 className="w-full bg-slate-900/50 border border-white/10 rounded-xl py-3 sm:py-4 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#7f13ec]/50 focus:border-[#7f13ec] transition-all text-sm sm:text-base"
                 placeholder="e.g. vercel"
               />
@@ -90,13 +198,17 @@ export function InputConsole({ onAnalyze }: InputConsoleProps) {
 
           {/* Project URL Input */}
           <div className="flex flex-col gap-2 text-left">
-            <label className="text-slate-300 text-sm font-semibold ml-1">Project URL</label>
+            <label className="text-slate-300 text-sm font-semibold ml-1">
+              Project URL
+            </label>
             <div className="relative group">
               <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-[#7f13ec] transition-colors" />
               <input
                 type="text"
                 value={projectUrl}
-                onChange={(e) => setProjectUrl(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setProjectUrl(e.target.value)
+                }
                 className="w-full bg-slate-900/50 border border-white/10 rounded-xl py-3 sm:py-4 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#7f13ec]/50 focus:border-[#7f13ec] transition-all text-sm sm:text-base"
                 placeholder="github.com/..."
               />
@@ -110,7 +222,7 @@ export function InputConsole({ onAnalyze }: InputConsoleProps) {
           whileTap={{ scale: 0.99 }}
           type="submit"
           className="w-full bg-[#7f13ec] hover:bg-blue-600 text-white font-bold text-base sm:text-lg py-4 sm:py-5 rounded-xl transition-all flex items-center justify-center gap-3"
-          style={{ boxShadow: '0 0 20px rgba(127, 19, 236, 0.4)' }}
+          style={{ boxShadow: "0 0 20px rgba(127, 19, 236, 0.4)" }}
         >
           <BarChart3 className="w-5 h-5" />
           Analyze Project Authenticity
@@ -118,7 +230,9 @@ export function InputConsole({ onAnalyze }: InputConsoleProps) {
 
         {/* Info Text */}
         <p className="mt-4 sm:mt-6 text-slate-500 text-xs text-center flex items-center justify-center gap-2">
-          <span className="w-3.5 h-3.5 rounded-full border border-slate-500 flex items-center justify-center text-[10px]">i</span>
+          <span className="w-3.5 h-3.5 rounded-full border border-slate-500 flex items-center justify-center text-[10px]">
+            i
+          </span>
           Analysis takes less than 2 seconds for most repositories.
         </p>
       </motion.form>
@@ -137,9 +251,12 @@ export function InputConsole({ onAnalyze }: InputConsoleProps) {
           <div className="bg-slate-800/50 p-3 rounded-xl text-[#7f13ec] mb-4">
             <BarChart3 className="w-6 h-6" />
           </div>
-          <h3 className="text-white text-lg font-bold mb-2">Pattern Recognition</h3>
+          <h3 className="text-white text-lg font-bold mb-2">
+            Pattern Recognition
+          </h3>
           <p className="text-slate-400 text-sm text-center md:text-left leading-relaxed">
-            Advanced ML models identify logical structures characteristic of LLMs.
+            Advanced ML models identify logical structures characteristic of
+            LLMs.
           </p>
         </motion.div>
 
@@ -152,7 +269,8 @@ export function InputConsole({ onAnalyze }: InputConsoleProps) {
           </div>
           <h3 className="text-white text-lg font-bold mb-2">GitHub Native</h3>
           <p className="text-slate-400 text-sm text-center md:text-left leading-relaxed">
-            Direct integration with GitHub API for deep commit and branch history analysis.
+            Direct integration with GitHub API for deep commit and branch
+            history analysis.
           </p>
         </motion.div>
 
@@ -163,9 +281,12 @@ export function InputConsole({ onAnalyze }: InputConsoleProps) {
           <div className="bg-slate-800/50 p-3 rounded-xl text-[#7f13ec] mb-4">
             <FileText className="w-6 h-6" />
           </div>
-          <h3 className="text-white text-lg font-bold mb-2">Detailed Reports</h3>
+          <h3 className="text-white text-lg font-bold mb-2">
+            Detailed Reports
+          </h3>
           <p className="text-slate-400 text-sm text-center md:text-left leading-relaxed">
-            Receive a comprehensive PDF breakdown showing probability of AI involvement per file.
+            Receive a comprehensive PDF breakdown showing probability of AI
+            involvement per file.
           </p>
         </motion.div>
       </motion.div>
@@ -178,19 +299,27 @@ export function InputConsole({ onAnalyze }: InputConsoleProps) {
         className="mt-12 sm:mt-20 flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-16 grayscale hover:grayscale-0 transition-all duration-500"
       >
         <div className="flex items-center gap-2 text-white font-bold text-lg sm:text-xl tracking-tight">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded bg-white/10 flex items-center justify-center text-xs sm:text-sm">G</div>
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded bg-white/10 flex items-center justify-center text-xs sm:text-sm">
+            G
+          </div>
           GITHUB
         </div>
         <div className="flex items-center gap-2 text-white font-bold text-lg sm:text-xl tracking-tight">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded bg-white/10 flex items-center justify-center text-xs sm:text-sm">▲</div>
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded bg-white/10 flex items-center justify-center text-xs sm:text-sm">
+            ▲
+          </div>
           Vercel
         </div>
         <div className="flex items-center gap-2 text-white font-bold text-lg sm:text-xl tracking-tight">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded bg-white/10 flex items-center justify-center text-xs sm:text-sm">S</div>
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded bg-white/10 flex items-center justify-center text-xs sm:text-sm">
+            S
+          </div>
           Supabase
         </div>
         <div className="flex items-center gap-2 text-white font-bold text-lg sm:text-xl tracking-tight">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded bg-white/10 flex items-center justify-center text-xs sm:text-sm">L</div>
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded bg-white/10 flex items-center justify-center text-xs sm:text-sm">
+            L
+          </div>
           Linear
         </div>
       </motion.div>
